@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the TWIG-YALL package.
+ *
+ * (c) Jitendra Adhikari <jiten.adhikary@gmail.com>
+ *     <https://github.com/adhocore>
+ *
+ * Licensed under MIT license.
+ */
+
 namespace Ahc\TwigYall;
 
 use Twig\Extension\AbstractExtension;
@@ -8,56 +17,81 @@ use Twig\TwigFunction;
 
 class Yall extends AbstractExtension
 {
+    protected $config = [];
+
+    public function __construct(array $config = [])
+    {
+        $this->config = $config + [
+            'polyfillJs'  => 'https://polyfill.io/%s/polyfill.min.js?features=IntersectionObserver',
+            // @see: https://stackoverflow.com/a/15960901
+            'placeholder' => 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEAAAAALAAAAAABAAEAAAI=',
+            'yallJs'      => 'https://unpkg.com/yall-js@%s/dist/yall.js',
+            'lazyClass'   => 'lazy',
+        ];
+    }
+
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('lazy', [$this, 'lazy']),
-            new TwigFunction('lazy_srcset', [$this, 'lazySrcset']),
-            new TwigFunction('lazy_poster', [$this, 'lazyPoster']),
+            new TwigFunction('lazify', [$this, 'lazify']),
             new TwigFunction('yallify', [$this, 'yallify']),
         ];
     }
 
-    public function lazy(string $src, string $classes = '', string $dummy = '')
+    public function yallify(string $yall = '3.1.7', string $polyfill = null, array $options = []): Markup
     {
-        return $this->lazify('src', $src, $classes, $dummy);
-    }
+        $yallJs   = \sprintf($this->config['yallJs'], $yall ?: '3.1.7');
+        $options += ['lazyClass' => $this->config['lazyClass']];
+        $jsonFlag = \JSON_UNESCAPED_SLASHES | \JSON_FORCE_OBJECT;
 
-    public function lazySrcset(string $src, string $classes = '', string $dummy = '')
-    {
-        return $this->lazify('srcset', $src, $classes, $dummy);
-    }
-
-    public function lazyPoster(string $src, string $classes = '', string $dummy = '')
-    {
-        return $this->lazify('poster', $src, $classes, $dummy);
-    }
-
-    public function lazify(string $attr, string $src, string $classes = '', string $dummy = '')
-    {
-        $classes = \trim("$classes lazy yall");
-        $dummy   = $dummy ?: 'data:image/gif;base64,R0lGODlhAQABAIABAP///wAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
-        $markup  = \sprintf('class="%s" %s="%s" data-%s="%s"', $classes, $attr, $dummy, $attr, $src);
-
-        return new Markup($markup, 'UTF-8');
-    }
-
-    public function yallify(string $version = '3.1.7', bool $polyfill = true)
-    {
-        $polyfill = $polyfill
-            ? '<script src="https://polyfill.io/v2/polyfill.min.js?features=IntersectionObserver" async></script>'
-            : '';
+        $jsonOpts = \json_encode($options, $jsonFlag);
+        $jsonOpts = \str_replace(['"<raw>', '</raw>"'], ['', ''], $jsonOpts);
 
         $markup = [
-            $polyfill,
-            '<script src="https://polyfill.io/v2/polyfill.min.js?features=IntersectionObserver" async></script>',
+            $polyfill ?? 'v2'
+                ? \sprintf('<script src="%s" async></script>', \sprintf($this->config['polyfillJs'], $polyfill ?? 'v2'))
+                : '',
+            \sprintf('<script src="%s" async></script>', $yallJs),
             '<script type="text/javascript">',
             'document.addEventListener("DOMContentLoaded", function() {',
-            '  window.setTimeout(function () { yall({ observeChanges: true }); }, 111);',
+            \sprintf('  window.setTimeout(function () { yall(%s); }, 99);', $jsonOpts),
             '});',
             '</script>',
         ];
 
+        return new Markup(\implode("\n", $markup), 'UTF-8');
+    }
+
+    public function lazify($src, string $classes = '', string $dummy = ''): Markup
+    {
+        $attr = 'src';
+        if (\is_array($src)) {
+            [$attr, $src] = $this->normalizeSrc($src);
+        }
+
+        $classes = \trim("$classes lazy yall");
+        if ('srcset' !== $attr) {
+            $dummy = \sprintf(' %s="%s"', $attr, $dummy ?: $this->config['placeholder']);
+        }
+
+        $markup = \sprintf('class="%s"%s data-%s="%s"', $classes, $dummy, $attr, $src);
+
         return new Markup($markup, 'UTF-8');
+    }
+
+    protected function normalizeSrc(array $src): array
+    {
+        if ($src['poster'] ?? false) {
+            return ['poster', $src['poster']];
+        }
+
+        if ($src['srcset'] ?? false) {
+            return ['srcset', $src['srcset']];
+        }
+
+        $srcset = $src;
+        $src    = \array_shift($srcset);
+
+        return ['src', $src . '" data-srcset="' . \implode(', ', $srcset)];
     }
 }

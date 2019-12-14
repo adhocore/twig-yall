@@ -6,3 +6,4 @@
 composer.lock
 coverage.xml
 clover.xml
+pre.lock
