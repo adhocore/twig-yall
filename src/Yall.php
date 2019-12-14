@@ -25,7 +25,7 @@ class Yall extends AbstractExtension
             'polyfillJs'  => 'https://polyfill.io/%s/polyfill.min.js?features=IntersectionObserver',
             // @see: https://stackoverflow.com/a/15960901
             'placeholder' => 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEAAAAALAAAAAABAAEAAAI=',
-            'yallJs'      => 'https://unpkg.com/yall-js@%s/dist/yall.js',
+            'yallJs'      => 'https://unpkg.com/yall-js@%s/dist/yall.min.js',
             'lazyClass'   => 'lazy',
         ];
     }

@@ -117,7 +117,7 @@ You can pass yall options in third param. For event callbacks wrap it in `<raw><
 will be rendered as:
 ```html
 <script src="https://polyfill.io/v2/polyfill.min.js?features=IntersectionObserver" async></script>
-<script src="https://unpkg.com/yall-js@3.1.7/dist/yall.js" async></script>
+<script src="https://unpkg.com/yall-js@3.1.7/dist/yall.min.js" async></script>
 <script type="text/javascript">
 document.addEventListener("DOMContentLoaded", function() {
   window.setTimeout(function () {

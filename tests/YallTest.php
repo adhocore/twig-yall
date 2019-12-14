@@ -78,7 +78,7 @@ class YallTest extends TestCase
         $default = $this->render('{{ yallify() }}');
 
         $this->assertContains(
-            'https://unpkg.com/yall-js@3.1.7/dist/yall.js',
+            'https://unpkg.com/yall-js@3.1.7/dist/yall.min.js',
             $default,
             'should contain yall.js'
         );
@@ -101,7 +101,7 @@ class YallTest extends TestCase
         $custom = $this->render('{{ yallify("3.1.6", "", {lazyClass: "lazzi", observeChanges: true}) }}');
 
         $this->assertContains(
-            'https://unpkg.com/yall-js@3.1.6/dist/yall.js',
+            'https://unpkg.com/yall-js@3.1.6/dist/yall.min.js',
             $custom,
             'should contain yall.js 3.1.6'
         );
@@ -130,7 +130,7 @@ class YallTest extends TestCase
         $null = $this->render('{{ yallify(null, null) }}');
 
         $this->assertContains(
-            'https://unpkg.com/yall-js@3.1.7/dist/yall.js',
+            'https://unpkg.com/yall-js@3.1.7/dist/yall.min.js',
             $null,
             'should contain yall.js 3.1.7 if null passed'
         );
@@ -144,7 +144,7 @@ class YallTest extends TestCase
         $empty = $this->render('{{ yallify("", "") }}');
 
         $this->assertContains(
-            'https://unpkg.com/yall-js@3.1.7/dist/yall.js',
+            'https://unpkg.com/yall-js@3.1.7/dist/yall.min.js',
             $empty,
             'should contain yall.js 3.1.7 if null passed'
         );
