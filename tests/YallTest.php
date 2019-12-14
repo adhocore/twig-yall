@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the TWIG-YALL package.
+ *
+ * (c) Jitendra Adhikari <jiten.adhikary@gmail.com>
+ *     <https://github.com/adhocore>
+ *
+ * Licensed under MIT license.
+ */
+
 namespace Ahc\TwigYall\Test;
 
 use Ahc\TwigYall\Yall;
@@ -9,7 +18,7 @@ use Twig\Loader\ArrayLoader;
 
 class YallTest extends TestCase
 {
-    static $twig;
+    public static $twig;
 
     public static function setUpBeforeClass()
     {
