@@ -38,7 +38,7 @@ class Yall extends AbstractExtension
         ];
     }
 
-    public function yallify(string $yall = '3.1.7', string $polyfill = null, array $options = []): Markup
+    public function yallify(string $yall = null, string $polyfill = null, array $options = []): Markup
     {
         $yallJs   = \sprintf($this->config['yallJs'], $yall ?: '3.1.7');
         $options += ['lazyClass' => $this->config['lazyClass']];
