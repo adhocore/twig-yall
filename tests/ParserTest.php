@@ -11,12 +11,8 @@
 
 namespace Ahc\TwigYall\Test;
 
-use Ahc\TwigYall\Yall;
 use PHPUnit\Framework\TestCase;
-use Twig\Environment;
-use Twig\Loader\ArrayLoader;
 
 class ParserTest extends TestCase
 {
-
 }
