@@ -18,7 +18,7 @@ use Twig\Loader\ArrayLoader;
 
 class YallTest extends TestCase
 {
-    public static $twig;
+    protected static $twig;
 
     public static function setUpBeforeClass()
     {
@@ -122,6 +122,75 @@ class YallTest extends TestCase
             'https://polyfill.io/v2/polyfill.min.js?features=IntersectionObserver',
             $custom,
             'shouldnt contain polyfill.js'
+        );
+    }
+
+    public function testYallifyNullEmpty()
+    {
+        $null = $this->render('{{ yallify(null, null) }}');
+
+        $this->assertContains(
+            'https://unpkg.com/yall-js@3.1.7/dist/yall.js',
+            $null,
+            'should contain yall.js 3.1.7 if null passed'
+        );
+
+        $this->assertContains(
+            'https://polyfill.io/v2/polyfill.min.js?features=IntersectionObserver',
+            $null,
+            'should contain polyfill v2 if null passed'
+        );
+
+        $empty = $this->render('{{ yallify("", "") }}');
+
+        $this->assertContains(
+            'https://unpkg.com/yall-js@3.1.7/dist/yall.js',
+            $empty,
+            'should contain yall.js 3.1.7 if null passed'
+        );
+
+        $this->assertNotContains(
+            'https://polyfill.io/v2/polyfill.min.js?features=IntersectionObserver',
+            $empty,
+            'should not contain polyfill if empty passed'
+        );
+    }
+
+    public function testConstruct()
+    {
+        $twig = new Environment(new ArrayLoader);
+
+        $twig->addExtension(new Yall([
+            'polyfillJs'  => '/js/poly.js',
+            'placeholder' => '/img/default.png',
+            'yallJs'      => '/js/yall.min.js',
+            'lazyClass'   => 'defer',
+        ]));
+
+        $yallify = $twig->createTemplate('{{ yallify() }}')->render();
+
+        $this->assertContains(
+            '/js/poly.js',
+            $yallify,
+            'should contain custom polyfill'
+        );
+
+        $this->assertContains(
+            '/js/yall.min.js',
+            $yallify,
+            'should contain custom yall js'
+        );
+
+        $this->assertContains(
+            'yall({"lazyClass":"defer"})',
+            $yallify,
+            'should contain custom lazyClass'
+        );
+
+        $this->assertSame(
+            'class="defer yall" src="/img/default.png" data-src="/cat.jpeg"',
+            $twig->createTemplate('{{ lazify("/cat.jpeg") }}')->render(),
+            'should contain custom placeholder and lazyClass'
         );
     }
 
