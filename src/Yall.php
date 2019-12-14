@@ -66,7 +66,7 @@ class Yall extends AbstractExtension
     {
         $attr = 'src';
         if (\is_array($src)) {
-            [$attr, $src] = $this->normalizeSrc($src);
+            list($attr, $src) = $this->normalizeSrc($src);
         }
 
         $classes = \trim("$classes lazy yall");
