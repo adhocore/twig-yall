@@ -69,7 +69,7 @@ class Yall extends AbstractExtension
             list($attr, $src) = $this->normalizeSrc($src);
         }
 
-        $classes = \trim("$classes lazy yall");
+        $classes = \trim("$classes {$this->config['lazyClass']} yall");
         if ('srcset' !== $attr) {
             $dummy = \sprintf(' %s="%s"', $attr, $dummy ?: $this->config['placeholder']);
         }
