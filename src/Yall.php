@@ -38,6 +38,11 @@ class Yall extends AbstractExtension
         ];
     }
 
+    public function getTokenParsers()
+    {
+        return [new Parser($this->config['lazyClass'], $this->config['placeholder'])];
+    }
+
     public function yallify(string $yall = null, string $polyfill = null, array $options = []): Markup
     {
         $yallJs   = \sprintf($this->config['yallJs'], $yall ?: '3.1.7');
