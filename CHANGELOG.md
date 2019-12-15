@@ -1,3 +1,10 @@
+## [0.2.1](https://github.com/adhocore/twig-yall/releases/tag/0.2.1) (2019-12-15)
+
+### Internal Refactors
+- **Parser**: Extract getSrc, merge no-lazy with data- (Jitendra Adhikari) [_9a95713_](https://github.com/adhocore/twig-yall/commit/9a95713)
+- **Parser**: Extract needsSrc, merge data-src/poster check (Jitendra Adhikari) [_662c3c7_](https://github.com/adhocore/twig-yall/commit/662c3c7)
+
+
 ## [0.2.0](https://github.com/adhocore/twig-yall/releases/tag/0.2.0) (2019-12-15)
 
 ### Features
