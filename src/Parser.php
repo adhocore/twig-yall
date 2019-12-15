@@ -38,17 +38,17 @@ class Parser extends AbstractTokenParser
         return $this->traverse($nodes);
     }
 
-    protected function traverse(Node $nodes)
+    protected function traverse(Node $node)
     {
-        foreach ($nodes as $node) {
-            if ($node instanceof TextNode) {
-                $node->setAttribute('data', $this->doLazyload($node->getAttribute('data')));
-            } else {
-                $this->traverse($node);
-            }
+        if ($node instanceof TextNode) {
+            $node->setAttribute('data', $this->doLazyload($node->getAttribute('data')));
         }
 
-        return $nodes;
+        foreach ($node as $sub) {
+            $this->traverse($sub);
+        }
+
+        return $node;
     }
 
     protected function doLazyload(string $html): string
