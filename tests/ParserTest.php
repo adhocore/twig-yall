@@ -130,6 +130,60 @@ class ParserTest extends TestCase
         );
     }
 
+    public function testLazyLoadNoDefer()
+    {
+        $irregular = "
+            <picture><source><img/></picture>
+            <img class='no-defer' src='no-lazy.jpg' />
+            <img data-src='already-lazy.jpg' />
+            <source data-srcset='img1.jpg 1x, img2.jpg 2x'>
+            <video data-poster='poster'>
+        ";
+
+        $this->assertContains(
+            trim($irregular),
+            $this->render("{% lazyload %}$irregular{% endlazyload %}"),
+            'shouldnot defer empty or already deferred or no-defer enforced'
+        );
+    }
+
+    public function testLazyloadNonImg()
+    {
+        $nonImg = $this->render("
+            {% lazyload %}
+            <video src='vid.mp4'></video>
+            <video poster='vid.jpg'>
+              <source src='vid1.mp4'>
+              <source src='vid2.mp4'>
+            </video>
+            {% endlazyload %}
+        ");
+
+        $this->assertContains(
+            '<video class="defer yall" src="img/default.png" data-src=\'vid.mp4\'></video>',
+            $nonImg,
+            'should defer video'
+        );
+
+        $this->assertContains(
+            '<video class="defer yall" poster="img/default.png" data-poster=\'vid.jpg\'>',
+            $nonImg,
+            'should defer video[poster]'
+        );
+
+        $this->assertContains(
+            "<source class=\"defer yall\" data-src='vid1.mp4'>",
+            $nonImg,
+            'should defer video.source'
+        );
+
+        $this->assertContains(
+            "<source class=\"defer yall\" data-src='vid2.mp4'>",
+            $nonImg,
+            'should defer video.source'
+        );
+    }
+
     protected function render(string $template): string
     {
         return static::$twig->createTemplate($template)->render();
