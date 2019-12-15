@@ -1,3 +1,23 @@
+## [0.2.0](https://github.com/adhocore/twig-yall/releases/tag/0.2.0) (2019-12-15)
+
+### Features
+- Register lazyload block parser (Jitendra Adhikari) [_8414673_](https://github.com/adhocore/twig-yall/commit/8414673)
+- Add lazyload block parser (Jitendra Adhikari) [_887ba05_](https://github.com/adhocore/twig-yall/commit/887ba05)
+
+### Bug Fixes
+- **Parser**: Traverse single node first (Jitendra Adhikari) [_a04dada_](https://github.com/adhocore/twig-yall/commit/a04dada)
+
+### Internal Refactors
+- **Parser**: Extract replacements, respect no-lazy, dont add src in source (Jitendra Adhikari) [_241f4a0_](https://github.com/adhocore/twig-yall/commit/241f4a0)
+
+### Miscellaneous
+- Add typehint (Jitendra Adhikari) [_c350981_](https://github.com/adhocore/twig-yall/commit/c350981)
+
+### Documentations
+- Add docblock (Jitendra Adhikari) [_68052c6_](https://github.com/adhocore/twig-yall/commit/68052c6)
+- About lazyload block parser (Jitendra Adhikari) [_03c8c64_](https://github.com/adhocore/twig-yall/commit/03c8c64)
+
+
 ## [0.1.0](https://github.com/adhocore/twig-yall/releases/tag/0.1.0) (2019-12-14)
 
 ### Features
