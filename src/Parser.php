@@ -32,10 +32,10 @@ class Parser extends AbstractTokenParser
         $stream = $this->parser->getStream();
 
         $stream->expect(Token::BLOCK_END_TYPE);
-        $nodes = $this->parser->subparse([$this, 'isLazyloadEnd'], true);
+        $body = $this->parser->subparse([$this, 'isLazyloadEnd'], true);
         $stream->expect(Token::BLOCK_END_TYPE);
 
-        return $this->traverse($nodes);
+        return $this->traverse($body);
     }
 
     protected function traverse(Node $node)
@@ -56,7 +56,7 @@ class Parser extends AbstractTokenParser
         return \preg_replace_callback('/<(img|source|video)([^>]+)>/m', function ($match) {
             list($all, $tag, $props) = $match;
 
-            if (empty(\trim($props, ' /')) || \stripos($props, $this->lazyClass) !== false) {
+            if (empty(\trim($props, ' /')) || \strpos($props, "no-{$this->lazyClass}") !== false) {
                 return $all;
             }
 
@@ -64,8 +64,8 @@ class Parser extends AbstractTokenParser
                 return $all;
             }
 
-            // For video, dont need src if not already there!
-            $needSrc = $tag !== 'video' || \strpos($props, 'src') !== false;
+            // For source no need src, for video no need src if not already there!
+            $needSrc = $tag !== 'source' && ($tag !== 'video' || \stripos($props, 'src') !== false);
 
             if (\stripos($props, ' class') === false) {
                 $tag .= " class=\"{$this->lazyClass} yall\"";
@@ -74,22 +74,30 @@ class Parser extends AbstractTokenParser
                 $tag .= " poster=\"{$this->placeholder}\"";
             }
 
-            $replacements = [
-                ' src='      => ' data-src=',
-                ' src ='     => ' data-src=',
-                ' srcset='   => ' data-srcset=',
-                ' srcset ='  => ' data-srcset=',
-                ' class="'   => " class=\"{$this->lazyClass} yall ",
-                ' class ="'  => " class=\"{$this->lazyClass} yall ",
-                ' class = "' => " class=\"{$this->lazyClass} yall ",
-                ' poster='   => ' data-poster=',
-                ' poster ='  => ' data-poster=',
-            ];
+            $src = $needSrc ? " src=\"{$this->placeholder}\"" : '';
 
-            $src = $needSrc ? " src=\"{$this->placeholder}\" " : ' ';
-
-            return "<$tag$src" . \trim(\strtr($props, $replacements)) . '>';
+            return "<$tag$src" . $this->doReplacements($props) . '>';
         }, $html);
+    }
+
+    protected function doReplacements(string $props): string
+    {
+        $replacements = [
+            ' src='      => ' data-src=',
+            ' src ='     => ' data-src=',
+            ' srcset='   => ' data-srcset=',
+            ' srcset ='  => ' data-srcset=',
+            ' class="'   => " class=\"{$this->lazyClass} yall ",
+            ' class ="'  => " class=\"{$this->lazyClass} yall ",
+            ' class = "' => " class=\"{$this->lazyClass} yall ",
+            " class='"   => " class='{$this->lazyClass} yall ",
+            " class ='"  => " class='{$this->lazyClass} yall ",
+            " class = '" => " class='{$this->lazyClass} yall ",
+            ' poster='   => ' data-poster=',
+            ' poster ='  => ' data-poster=',
+        ];
+
+        return \strtr($props, $replacements);
     }
 
     public function isLazyloadEnd(Token $token): bool
