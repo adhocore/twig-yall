@@ -12,6 +12,9 @@ for lazy loading `img`, `picture`, `video`, `iframe` etc.
 [![StyleCI](https://styleci.io/repos/172214338/shield)](https://styleci.io/repos/172214338)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](./LICENSE)
 
+Eager loading of images and videos not only makes webpage slow and clumsy but also consumes a lot of bandwidth.
+
+If you use twig templating system for your view layer, this extension defers loading of resources so they are loaded only when required in viewport.
 
 ## Installation
 ```bash
