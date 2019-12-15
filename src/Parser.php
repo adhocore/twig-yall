@@ -72,16 +72,16 @@ class Parser extends AbstractTokenParser
         return \preg_replace_callback('/<(img|source|video)([^>]+)>/m', function ($match) {
             list($all, $tag, $props) = $match;
 
-            if (empty(\trim($props, ' /')) || \strpos($props, "no-{$this->lazyClass}") !== false) {
+            if (empty(\trim($props, ' /'))) {
                 return $all;
             }
 
-            // Already there
-            if (\preg_match('/data-(src|poster)/i', $props)) {
+            // Already there or no-flagged
+            if (\preg_match('/(data-(src|poster)|no-' . $this->lazyClass . ')/i', $props)) {
                 return $all;
             }
 
-            $needsSrc = $this->needsSrc($tag, $props);
+            $src = $this->getSrc($tag, $props);
             if (\stripos($props, ' class') === false) {
                 $tag .= " class=\"{$this->lazyClass} yall\"";
             }
@@ -89,20 +89,23 @@ class Parser extends AbstractTokenParser
                 $tag .= " poster=\"{$this->placeholder}\"";
             }
 
-            $src = $needsSrc ? " src=\"{$this->placeholder}\"" : '';
-
             return "<$tag$src" . $this->doReplacements($props) . '>';
         }, $html);
     }
 
-    protected function needsSrc(string $tag, string $props): bool
+    protected function getSrc(string $tag, string $props): string
     {
-        // For source no need src, for video no need src if not already there!
+        // For source no need src
         if ($tag === 'source') {
-            return false;
+            return '';
         }
 
-        return $tag !== 'video' || \stripos($props, 'src') !== false;
+        // For video no need src if not already there!
+        if ($tag === 'video' && \stripos($props, 'src') === false) {
+            return '';
+        }
+
+        return ' src="' . $this->placeholder . '"';
     }
 
     protected function doReplacements(string $props): string
