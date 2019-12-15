@@ -166,6 +166,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   }, 99);
 });
+</script>
 ```
 
 **PS:**
