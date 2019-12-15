@@ -37,9 +37,45 @@ $twig->addExtension(new Ahc\TwigYall\Yall(
 ));
 ```
 
-Voila, then in twig templates you would add `{{ lazify(...) }}` and `{{ yallify(...) }}`.
+Voila, then in twig templates you would either use `{% lazyload %}` block to lazyload whole block at once
+OR individually lazyload each resources with `{{ lazify() }}`.
 
-See examples below:
+In both cases, you must call `{{ yallify() }}` somewhere at the footer.
+
+### lazyload
+
+With `placeholder` config set to `'default.png'`, below template
+```twig
+<img src="apple.jpg" />                   {# not lazyloaded #}
+{% lazyload %}
+<img src="ball.jpg" />                    {# lazyloaded #}
+<img src="cat.jpg" class="no-lazy" />     {# not lazyloaded #}
+<img src="cat.jpg" data-src="..." />      {# not lazyloaded #}
+<video poster="vid.jpg">                  {# lazyloaded #}
+  <source src="vid1.mp4">                 {# lazyloaded #}
+  <source src="vid2.mp4">                 {# lazyloaded #}
+</video>
+<video class='no-lazy' src="..."></video> {# not lazyloaded #}
+<picture><source src="pic.jpg"></picture> {# lazyloaded #}
+{% endlazyload %}
+<img src="...">                           {# not lazyloaded #}
+```
+will be rendered as:
+```html
+<img src="apple.jpg" />
+<img class="lazy yall" src="default.png" data-src="ball.jpg" />
+<img src="cat.jpg" class="no-lazy" />
+<img src="cat.jpg" data-src="..." />
+<video class="lazy yall" poster="default.png" data-poster="vid.jpg">
+  <source class="lazy yall" data-src="vid1.mp4">
+  <source class="lazy yall" data-src="vid2.mp4">
+</video>
+<video class='no-lazy' src="..."></video>
+<picture><source class="lazy yall" data-src="pic.jpg"></picture>
+<img src="...">
+```
+
+### lazify
 
 #### only src
 ```twig
@@ -133,7 +169,7 @@ document.addEventListener("DOMContentLoaded", function() {
 ```
 
 **PS:**
-The inputs sent to `lazyify()` or `yallify()` are not validated by this library.
+The inputs sent to `lazify()` or `yallify()` are not validated by this library.
 
 From `malchata/yall.js`:
 > Use appropriate width and height attributes, styles, and lightweight placeholders for your images.
