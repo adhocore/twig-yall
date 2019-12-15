@@ -38,7 +38,7 @@ class Yall extends AbstractExtension
         ];
     }
 
-    public function getTokenParsers()
+    public function getTokenParsers(): array
     {
         return [new Parser($this->config['lazyClass'], $this->config['placeholder'])];
     }
