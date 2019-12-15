@@ -17,8 +17,14 @@ use Twig\TwigFunction;
 
 class Yall extends AbstractExtension
 {
+    /** @var array Configuration */
     protected $config = [];
 
+    /**
+     * Constructor
+     *
+     * @param array $config Optinal configuration
+     */
     public function __construct(array $config = [])
     {
         $this->config = $config + [
@@ -30,6 +36,11 @@ class Yall extends AbstractExtension
         ];
     }
 
+    /**
+     * Get twig functions defined by this extension.
+     *
+     * @return array
+     */
     public function getFunctions(): array
     {
         return [
@@ -38,11 +49,25 @@ class Yall extends AbstractExtension
         ];
     }
 
+    /**
+     * Get token parsers defined by this extension.
+     *
+     * @return array
+     */
     public function getTokenParsers(): array
     {
         return [new Parser($this->config['lazyClass'], $this->config['placeholder'])];
     }
 
+    /**
+     * Loads yall and polyfill scripts then triggers lazy loading.
+     *
+     * @param  string|null $yall     Yall version
+     * @param  string|null $polyfill Polyfill version ('' = off)
+     * @param  array       $options  Options for `yall({})` callback
+     *
+     * @return Markup
+     */
     public function yallify(string $yall = null, string $polyfill = null, array $options = []): Markup
     {
         $yallJs   = \sprintf($this->config['yallJs'], $yall ?: '3.1.7');
@@ -67,6 +92,15 @@ class Yall extends AbstractExtension
         return new Markup(\implode("\n", $markup), 'UTF-8');
     }
 
+    /**
+     * Lazify resources.
+     *
+     * @param  string|string[] $src     The sources to lazy load
+     * @param  string          $classes The optional element classes
+     * @param  string          $dummy   The optional placeholder image
+     *
+     * @return Markup
+     */
     public function lazify($src, string $classes = '', string $dummy = ''): Markup
     {
         $attr = 'src';

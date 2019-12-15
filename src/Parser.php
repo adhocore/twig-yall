@@ -18,15 +18,31 @@ use Twig\TokenParser\AbstractTokenParser;
 
 class Parser extends AbstractTokenParser
 {
+    /** @var string yall lazyClass */
     protected $lazyClass;
+
+    /** @var string URI for placeholder image */
     protected $placeholder;
 
+    /**
+     * Constructor
+     *
+     * @param string $lazyClass
+     * @param string $placeholder
+     */
     public function __construct(string $lazyClass, string $placeholder)
     {
         $this->lazyClass   = $lazyClass;
         $this->placeholder = $placeholder;
     }
 
+    /**
+     * Parse `{% lazyload %}...{% endlazyload %}` block.
+     *
+     * @param Token  $token
+     *
+     * @return Node
+     */
     public function parse(Token $token): Node
     {
         $stream = $this->parser->getStream();
@@ -100,11 +116,19 @@ class Parser extends AbstractTokenParser
         return \strtr($props, $replacements);
     }
 
+    /**
+     * @internal
+     */
     public function isLazyloadEnd(Token $token): bool
     {
         return $token->test('endlazyload');
     }
 
+    /**
+     * Gets the tag name used in block.
+     *
+     * @return string
+     */
     public function getTag(): string
     {
         return 'lazyload';
