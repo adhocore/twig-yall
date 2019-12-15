@@ -25,7 +25,7 @@ class Parser extends AbstractTokenParser
     protected $placeholder;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param string $lazyClass
      * @param string $placeholder
@@ -39,7 +39,7 @@ class Parser extends AbstractTokenParser
     /**
      * Parse `{% lazyload %}...{% endlazyload %}` block.
      *
-     * @param Token  $token
+     * @param Token $token
      *
      * @return Node
      */

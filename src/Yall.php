@@ -21,7 +21,7 @@ class Yall extends AbstractExtension
     protected $config = [];
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param array $config Optinal configuration
      */
@@ -62,9 +62,9 @@ class Yall extends AbstractExtension
     /**
      * Loads yall and polyfill scripts then triggers lazy loading.
      *
-     * @param  string|null $yall     Yall version
-     * @param  string|null $polyfill Polyfill version ('' = off)
-     * @param  array       $options  Options for `yall({})` callback
+     * @param string|null $yall     Yall version
+     * @param string|null $polyfill Polyfill version ('' = off)
+     * @param array       $options  Options for `yall({})` callback
      *
      * @return Markup
      */
@@ -95,9 +95,9 @@ class Yall extends AbstractExtension
     /**
      * Lazify resources.
      *
-     * @param  string|string[] $src     The sources to lazy load
-     * @param  string          $classes The optional element classes
-     * @param  string          $dummy   The optional placeholder image
+     * @param string|string[] $src     The sources to lazy load
+     * @param string          $classes The optional element classes
+     * @param string          $dummy   The optional placeholder image
      *
      * @return Markup
      */
