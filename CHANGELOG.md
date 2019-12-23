@@ -1,3 +1,13 @@
+## [0.2.2](https://github.com/adhocore/twig-yall/releases/tag/0.2.2) (2019-12-23)
+
+### Internal Refactors
+- Add return typehint (Jitendra Adhikari) [_82644f1_](https://github.com/adhocore/twig-yall/commit/82644f1)
+
+### Documentations
+- Add more intro (Jitendra Adhikari) [_1cbb125_](https://github.com/adhocore/twig-yall/commit/1cbb125)
+- Minor update (Jitendra Adhikari) [_6af6e4b_](https://github.com/adhocore/twig-yall/commit/6af6e4b)
+
+
 ## [0.2.1](https://github.com/adhocore/twig-yall/releases/tag/0.2.1) (2019-12-15)
 
 ### Internal Refactors
