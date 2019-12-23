@@ -54,7 +54,7 @@ class Parser extends AbstractTokenParser
         return $this->traverse($body);
     }
 
-    protected function traverse(Node $node)
+    protected function traverse(Node $node): Node
     {
         if ($node instanceof TextNode) {
             $node->setAttribute('data', $this->doLazyload($node->getAttribute('data')));
